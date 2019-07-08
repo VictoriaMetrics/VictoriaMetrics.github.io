@@ -1,14 +1,3 @@
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129683199-1">
-</script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-129683199-1');
-</script>
-
 [![Latest Release](https://img.shields.io/github/release/VictoriaMetrics/VictoriaMetrics.svg?style=flat-square)](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest)
 [![GitHub license](https://img.shields.io/github/license/VictoriaMetrics/VictoriaMetrics.svg)](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/LICENSE)
 [![Go Report](https://goreportcard.com/badge/github.com/VictoriaMetrics/VictoriaMetrics)](https://goreportcard.com/report/github.com/VictoriaMetrics/VictoriaMetrics)
@@ -87,6 +76,7 @@ Cluster version is available [here](https://github.com/VictoriaMetrics/VictoriaM
   - [Downsampling](#downsampling)
   - [Multi-tenancy](#multi-tenancy)
   - [Scalability and cluster version](#scalability-and-cluster-version)
+  - [Alerting](#alerting)
   - [Security](#security)
   - [Tuning](#tuning)
   - [Monitoring](#monitoring)
@@ -505,6 +495,12 @@ such as Thanos, Uber M3, InfluxDB or TimescaleDB. See [vertical scalability benc
 So try single-node VictoriaMetrics at first and then [switch to cluster version](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/cluster) if you still need
 horizontally scalable long-term remote storage for really large Prometheus deployments.
 [Contact us](mailto:info@victoriametrics.com) for paid support.
+
+
+### Alerting
+
+VictoriaMetrics doesn't support rule evaluation and alerting yet, so these actions must be performed either
+on [Prometheus side](https://prometheus.io/docs/alerting/overview/) or on [Grafana side](https://grafana.com/docs/alerting/rules/).
 
 
 ### Security
