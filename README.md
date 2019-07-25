@@ -66,11 +66,10 @@ Cluster version is available [here](https://github.com/VictoriaMetrics/VictoriaM
   - [How to build from sources](#how-to-build-from-sources)
     - [Development build](#development-build)
     - [Production build](#production-build)
+    - [ARM build](#arm-build)
+    - [Pure Go build (CGO_ENABLED=0)](#pure-go-build-cgo_enabled0)
     - [Building docker images](#building-docker-images)
   - [How to start VictoriaMetrics](#how-to-start-victoriametrics)
-  - [Start with docker-compose](#start-with-docker-compose)
-  - [Setting up service](#setting-up-service)
-  - [Third-party contributions](#third-party-contributions)
   - [Prometheus setup](#prometheus-setup)
   - [Grafana setup](#grafana-setup)
   - [How to upgrade VictoriaMetrics?](#how-to-upgrade-victoriametrics)
@@ -79,6 +78,9 @@ Cluster version is available [here](https://github.com/VictoriaMetrics/VictoriaM
   - [How to send data from Graphite-compatible agents such as StatsD?](#how-to-send-data-from-graphite-compatible-agents-such-as-statsd)
   - [Querying Graphite data](#querying-graphite-data)
   - [How to send data from OpenTSDB-compatible agents?](#how-to-send-data-from-opentsdb-compatible-agents)
+  - [Start with docker-compose](#start-with-docker-compose)
+  - [Setting up service](#setting-up-service)
+  - [Third-party contributions](#third-party-contributions)
   - [How to work with snapshots?](#how-to-work-with-snapshots)
   - [How to delete time series?](#how-to-delete-time-series)
   - [How to export time series?](#how-to-export-time-series)
@@ -124,6 +126,22 @@ to your needs.
 2. Run `make victoria-metrics-prod` from the root folder of the repository.
    It will build `victoria-metrics-prod` binary and put it into the `bin` folder.
 
+#### ARM build
+
+1. [Install Go](https://golang.org/doc/install). The minimum supported version is Go 1.12.
+2. Run `make victoria-metrics-arm` or `make victoria-metrics-arm64` from the root folder of the repository.
+   It will build `victoria-metrics-arm` or `victoria-metrics-arm64` binary respectively and put it into the `bin` folder.
+
+#### Pure Go build (CGO_ENABLED=0)
+
+`Pure Go` mode builds only Go code without [cgo](https://golang.org/cmd/cgo/) dependencies.
+This is experimental mode, which may result in lower compression ratio and slower decompression performance.
+Use it with caution!
+
+1. [Install Go](https://golang.org/doc/install). The minimum supported version is Go 1.12.
+2. Run `make victoria-metrics-pure` from the root folder of the repository.
+   It will build `victoria-metrics-pure` binary and put it into the `bin` folder.
+
 #### Building docker images
 
 Run `make package-victoria-metrics`. It will build `victoriametrics/victoria-metrics:<PKG_TAG>` docker image locally.
@@ -144,23 +162,6 @@ The following command line flags are used the most:
 * `-opentsdbListenAddr` - TCP and UDP address to listen to for OpenTSDB data. By default it is disabled.
 
 Pass `-help` to see all the available flags with description and default values.
-
-
-### Start with docker-compose
-
-[Docker-compose](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/deployment/docker/docker-compose.yml)
-helps to spin up VictoriaMetrics, Prometheus and Grafana with one command.
-More details may be found [here](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/docker#folder-contains-basic-images-and-tools-for-building-and-running-victoria-metrics-in-docker).
-
-
-### Setting up service
-
-Read [these instructions](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/43) on how to set up VictoriaMetrics as a service in your OS.
-
-
-### Third-party contributions
-
-* [Unofficial yum repository](https://copr.fedorainfracloud.org/coprs/antonpatsev/VictoriaMetrics/) ([source code](https://github.com/patsevanton/victoriametrics-rpm))
 
 
 ### Prometheus setup
@@ -367,6 +368,23 @@ The `/api/v1/export` endpoint should return the following response:
 ```
 {"metric":{"__name__":"foo.bar.baz","tag1":"value1","tag2":"value2"},"values":[123],"timestamps":[1560277292000]}
 ```
+
+
+### Start with docker-compose
+
+[Docker-compose](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/deployment/docker/docker-compose.yml)
+helps to spin up VictoriaMetrics, Prometheus and Grafana with one command.
+More details may be found [here](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/master/deployment/docker#folder-contains-basic-images-and-tools-for-building-and-running-victoria-metrics-in-docker).
+
+
+### Setting up service
+
+Read [these instructions](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/43) on how to set up VictoriaMetrics as a service in your OS.
+
+
+### Third-party contributions
+
+* [Unofficial yum repository](https://copr.fedorainfracloud.org/coprs/antonpatsev/VictoriaMetrics/) ([source code](https://github.com/patsevanton/victoriametrics-rpm))
 
 
 ### How to work with snapshots?
