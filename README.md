@@ -99,6 +99,7 @@ Cluster version is available [here](https://github.com/VictoriaMetrics/VictoriaM
   - [Monitoring](#monitoring)
   - [Troubleshooting](#troubleshooting)
   - [Backfilling](#backfilling)
+  - [Profiling](#profiling)
 - [Roadmap](#roadmap)
 - [Contacts](#contacts)
 - [Community and contributions](#community-and-contributions)
@@ -219,7 +220,8 @@ For instance, put the following lines into `Telegraf` config, so it sends data t
 Do not forget substituting `<victoriametrics-addr>` with the real address where VictoriaMetrics runs.
 
 VictoriaMetrics maps Influx data using the following rules:
-* [`db` query arg](https://docs.influxdata.com/influxdb/v1.7/tools/api/#write-http-endpoint) is mapped into `db` label value.
+* [`db` query arg](https://docs.influxdata.com/influxdb/v1.7/tools/api/#write-http-endpoint) is mapped into `db` label value
+  unless `db` tag exists in the Influx line.
 * Field names are mapped to time series names prefixed with `{measurement}{separator}` value,
   where `{separator}` equals to `_` by default. It can be changed with `-influxMeasurementFieldSeparator` command-line flag.
   See also `-influxSkipSingleField` command-line flag.
@@ -697,9 +699,30 @@ The most interesting metrics are:
 
 ### Backfilling
 
+Make sure that configured `-retentionPeriod` covers timestamps for the backfilled data.
+
 It is recommended disabling query cache with `-search.disableCache` command-line flag when writing
 historical data with timestamps from the past, since the cache assumes that the data is written with
 the current timestamps. Query cache can be enabled after the backfilling is complete.
+
+
+### Profiling
+
+VictoriaMetrics provides handlers for collecting the following [Go profiles](https://blog.golang.org/profiling-go-programs):
+
+- Memory profile. It can be collected with the following command:
+```
+curl -s http://<victoria-metrics-host>:8428/debug/pprof/heap > mem.pprof
+```
+
+- CPU profile. It can be collected with the following command:
+```
+curl -s http://<victoria-metrics-host>:8428/debug/pprof/profile > cpu.pprof
+```
+
+The command for collecting CPU profile waits for 30 seconds before returning.
+
+The collected profiles may be analyzed with [go tool pprof](https://github.com/google/pprof).
 
 
 ## Roadmap
