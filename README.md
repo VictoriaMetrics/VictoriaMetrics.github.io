@@ -13,7 +13,7 @@
 [![Slack](https://img.shields.io/badge/join%20slack-%23victoriametrics-brightgreen.svg)](http://slack.victoriametrics.com/)
 [![GitHub license](https://img.shields.io/github/license/VictoriaMetrics/VictoriaMetrics.svg)](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/LICENSE)
 [![Go Report](https://goreportcard.com/badge/github.com/VictoriaMetrics/VictoriaMetrics)](https://goreportcard.com/report/github.com/VictoriaMetrics/VictoriaMetrics)
-[![Build Status](https://travis-ci.org/VictoriaMetrics/VictoriaMetrics.svg?branch=master)](https://travis-ci.org/VictoriaMetrics/VictoriaMetrics)
+[![Build Status](https://github.com/VictoriaMetrics/VictoriaMetrics/workflows/main/badge.svg)](https://github.com/VictoriaMetrics/VictoriaMetrics/actions)
 [![codecov](https://codecov.io/gh/VictoriaMetrics/VictoriaMetrics/branch/master/graph/badge.svg)](https://codecov.io/gh/VictoriaMetrics/VictoriaMetrics)
 
 <img alt="Victoria Metrics" src="logo.png">
@@ -197,6 +197,9 @@ Follow the following steps during the upgrade:
 2) Wait until the process stops. This can take a few seconds.
 3) Start the upgraded VictoriaMetrics.
 
+Prometheus doesn't drop data during VictoriaMetrics restart.
+See [this article](https://grafana.com/blog/2019/03/25/whats-new-in-prometheus-2.8-wal-based-remote-write/) for details.
+
 
 ### How to apply new config to VictoriaMetrics?
 
@@ -205,6 +208,9 @@ VictoriaMetrics must be restarted for applying new config:
 1) Send `SIGINT` signal to VictoriaMetrics process in order to gracefully stop it.
 2) Wait until the process stops. This can take a few seconds.
 3) Start VictoriaMetrics with the new config.
+
+Prometheus doesn't drop data during VictoriaMetrics restart.
+See [this article](https://grafana.com/blog/2019/03/25/whats-new-in-prometheus-2.8-wal-based-remote-write/) for details.
 
 
 ### How to send data from InfluxDB-compatible agents such as [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/)?
@@ -488,6 +494,9 @@ Send a request to `http://<victoriametrics-addr>:8428/api/v1/admin/tsdb/delete_s
 where `<timeseries_selector_for_delete>` may contain any [time series selector](https://prometheus.io/docs/prometheus/latest/querying/basics/#time-series-selectors)
 for metrics to delete. After that all the time series matching the given selector are deleted. Storage space for
 the deleted time series isn't freed instantly - it is freed during subsequent merges of data files.
+
+It is recommended verifying which metrics will be deleted with the call to `http://<victoria-metrics-addr>:8428/api/v1/series?match[]=<timeseries_selector_for_delete>`
+before actually deleting the metrics.
 
 
 ### How to export time series?
