@@ -182,7 +182,7 @@ http://<victoriametrics-addr>:8428
 Substitute `<victoriametrics-addr>` with the hostname or IP address of VictoriaMetrics.
 
 Then build graphs with the created datasource using [Prometheus query language](https://prometheus.io/docs/prometheus/latest/querying/basics/).
-VictoriaMetrics supports native PromQL and [extends it with useful features](ExtendedPromQL).
+VictoriaMetrics supports native PromQL and [extends it with useful features](https://github.com/VictoriaMetrics/VictoriaMetrics/wiki/ExtendedPromQL).
 
 
 ### How to upgrade VictoriaMetrics?
@@ -663,6 +663,8 @@ For example, substitute `-graphiteListenAddr=:2003` with `-graphiteListenAddr=<i
 * There is no need in Operating System tuning since VictoriaMetrics is optimized for default OS settings.
   The only option is increasing the limit on [the number of open files in the OS](https://medium.com/@muhammadtriwibowo/set-permanently-ulimit-n-open-files-in-ubuntu-4d61064429a),
   so Prometheus instances could establish more connections to VictoriaMetrics.
+* The recommended filesystem is `ext4`, the recommended persistent storage is [persistent HDD-based disk on GCP](https://cloud.google.com/compute/docs/disks/#pdspecs),
+  since it is protected from hardware failures via internal replication and it can be [resized on the fly](https://cloud.google.com/compute/docs/disks/add-persistent-disk#resize_pd).
 
 
 ### Monitoring
@@ -688,6 +690,9 @@ The most interesting metrics are:
 
 
 ### Troubleshooting
+
+* It is recommended to use default command-line flag values (i.e. don't set them explicitly) until the need
+  in tweaking these flag values arises.
 
 * If VictoriaMetrics works slowly and eats more than a CPU core per 100K ingested data points per second,
   then it is likely you have too many active time series for the current amount of RAM.
