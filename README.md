@@ -100,6 +100,7 @@ Cluster version is available [here](https://github.com/VictoriaMetrics/VictoriaM
   - [Troubleshooting](#troubleshooting)
   - [Backfilling](#backfilling)
   - [Profiling](#profiling)
+- [Integrations](#integrations)
 - [Roadmap](#roadmap)
 - [Contacts](#contacts)
 - [Community and contributions](#community-and-contributions)
@@ -118,8 +119,8 @@ or [docker image](https://hub.docker.com/r/victoriametrics/victoria-metrics/) wi
 
 The following command-line flags are used the most:
 
-* `-storageDataPath` - path to data directory. VictoriaMetrics stores all the data in this directory.
-* `-retentionPeriod` - retention period in months for the data. Older data is automatically deleted.
+* `-storageDataPath` - path to data directory. VictoriaMetrics stores all the data in this directory. Default path is `victoria-metrics-data` in current working directory.
+* `-retentionPeriod` - retention period in months for the data. Older data is automatically deleted. Default period is 1 month.
 * `-httpListenAddr` - TCP address to listen to for http requests. By default, it listens port `8428` on all the network interfaces.
 * `-graphiteListenAddr` - TCP and UDP address to listen to for Graphite data. By default, it is disabled.
 * `-opentsdbListenAddr` - TCP and UDP address to listen to for OpenTSDB data over telnet protocol. By default, it is disabled.
@@ -743,6 +744,14 @@ curl -s http://<victoria-metrics-host>:8428/debug/pprof/profile > cpu.pprof
 The command for collecting CPU profile waits for 30 seconds before returning.
 
 The collected profiles may be analyzed with [go tool pprof](https://github.com/google/pprof).
+
+
+## Integrations
+
+* [netdata](https://github.com/netdata/netdata) can push data into VictoriaMetrics via `Prometheus remote_write API`.
+  See [these docs](https://github.com/netdata/netdata#integrations).
+* [go-graphite/carbonapi](https://github.com/go-graphite/carbonapi) can use VictoriaMetrics as time series backend.
+  See [this example](/blob/master/cmd/carbonapi/carbonapi.example.prometheus.yaml).
 
 
 ## Roadmap
