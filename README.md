@@ -45,7 +45,7 @@ Cluster version is available [here](https://github.com/VictoriaMetrics/VictoriaM
   See [vertical scalability benchmarks](https://medium.com/@valyala/measuring-vertical-scalability-for-time-series-databases-in-google-cloud-92550d78d8ae)
   and [comparing Thanos to VictoriaMetrics cluster](https://medium.com/@valyala/comparing-thanos-to-victoriametrics-cluster-b193bea1683).
 * Easy operation:
-  * VictoriaMetrics consists of a single executable without external dependencies.
+  * VictoriaMetrics consists of a single [small executable](https://medium.com/@valyala/stripping-dependency-bloat-in-victoriametrics-docker-image-983fb5912b0d) without external dependencies.
   * All the configuration is done via explicit command-line flags with reasonable defaults.
   * All the data is stored in a single directory pointed by `-storageDataPath` flag.
   * Easy and fast backups from [instant snapshots](https://medium.com/@valyala/how-victoriametrics-makes-instant-snapshots-for-multi-terabyte-time-series-data-e1f3fb0e0282)
@@ -487,10 +487,9 @@ Navigate to `http://<victoriametrics-addr>:8428/snapshot/delete_all` in order to
 
 Steps for restoring from a snapshot:
 1. Stop VictoriaMetrics with `kill -INT`.
-2. Remove the entire contents of the directory pointed by `-storageDataPath` command-line flag.
-3. Restore snapshot contents from backup with [vmrestore](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/app/vmrestore/README.md)
+2. Restore snapshot contents from backup with [vmrestore](https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/app/vmrestore/README.md)
    to the directory pointed by `-storageDataPath`.
-4. Start VictoriaMetrics.
+3. Start VictoriaMetrics.
 
 
 ### How to delete time series?
@@ -754,6 +753,7 @@ The collected profiles may be analyzed with [go tool pprof](https://github.com/g
   See [these docs](https://github.com/netdata/netdata#integrations).
 * [go-graphite/carbonapi](https://github.com/go-graphite/carbonapi) can use VictoriaMetrics as time series backend.
   See [this example](/blob/master/cmd/carbonapi/carbonapi.example.prometheus.yaml).
+* [Ansible role for installing VictoriaMetrics](https://github.com/dreamteam-gg/ansible-victoriametrics-role).
 
 
 ## Roadmap
