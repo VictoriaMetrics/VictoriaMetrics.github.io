@@ -1,3 +1,9 @@
+title: Your awesome title
+author: VictoriaMetrics
+email: info@victoriametrics.com
+description: >
+  The best long-term remote storage 
+  
 plugins:
   - jekyll-remote-theme
 
