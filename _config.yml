@@ -9,4 +9,3 @@ plugins:
 
 remote_theme: jekyll/minima
 google_analytics: UA-129683199-1
-show_excerpts: true
