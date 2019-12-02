@@ -38,4 +38,7 @@ In that case, don't need to bump the helm chart version
 All changes from `docs` folder and `.md` extension automatically push to Wiki
 
 **_Note_**: no vice versa, direct changes on Wiki will be overitten after any changes in `docs/*.md` 
-     
+
+## Githab pages      
+
+All changes in `README.md`, `docs` folder and `.md` extension automatically push to Wiki
