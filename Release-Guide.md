@@ -1,3 +1,5 @@
+Release process guidance
+
 ## Release version and Docker images
 
 1. Create release tag with `git tag v1.xx.y`.
