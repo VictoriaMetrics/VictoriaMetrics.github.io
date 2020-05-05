@@ -192,7 +192,7 @@ Read more about relabeling in the following articles:
 `vmagent` exports various metrics in Prometheus exposition format at `http://vmagent-host:8429/metrics` page. It is recommended setting up regular scraping of this page
 either via `vmagent` itself or via Prometheus, so the exported metrics could be analyzed later.
 
-`vmagent` also exports target statuses at `http://vmagent-host:8429/targets` page in plaintext format. This page also exports information on improperly configured scrape configs.
+`vmagent` also exports target statuses at `http://vmagent-host:8429/targets` page in plaintext format.
 
 
 ### Troubleshooting
@@ -240,3 +240,24 @@ by setting it via `<ROOT_IMAGE>` environment variable. For example, the followin
 ```bash
 ROOT_IMAGE=alpine:3.11 make package-vmagent
 ```
+
+
+### Profiling
+
+`vmagent` provides handlers for collecting the following [Go profiles](https://blog.golang.org/profiling-go-programs):
+
+* Memory profile. It can be collected with the following command:
+
+```bash
+curl -s http://<vmagent-host>:8428/debug/pprof/heap > mem.pprof
+```
+
+* CPU profile. It can be collected with the following command:
+
+```bash
+curl -s http://<vmagent-host>:8428/debug/pprof/profile > cpu.pprof
+```
+
+The command for collecting CPU profile waits for 30 seconds before returning.
+
+The collected profiles may be analyzed with [go tool pprof](https://github.com/google/pprof).
