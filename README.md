@@ -106,7 +106,9 @@ Click on a link in order to read the corresponding case study
 * [How to send data from OpenTSDB-compatible agents](#how-to-send-data-from-opentsdb-compatible-agents)
 * [Prometheus querying API usage](#prometheus-querying-api-usage)
   * [Prometheus querying API enhancements](#prometheus-querying-api-enhancements)
-* [Graphite Metrics API usage](#graphite-metrics-api-usage)
+* [Graphite API usage](#graphite-api-usage)
+  * [Graphite Metrics API usage](#graphite-metrics-api-usage)
+  * [Graphite Tags API usage](#graphite-tags-api-usage)
 * [How to build from sources](#how-to-build-from-sources)
   * [Development build](#development-build)
   * [Production build](#production-build)
@@ -412,6 +414,7 @@ Data sent to VictoriaMetrics via `Graphite plaintext protocol` may be read via t
 
 * [Prometheus querying API](#prometheus-querying-api-usage)
 * Metric names can be explored via [Graphite metrics API](#graphite-metrics-api-usage)
+* Tags can be explored via [Graphite tags API](#graphite-tags-api-usage)
 * [go-graphite/carbonapi](https://github.com/go-graphite/carbonapi/blob/master/cmd/carbonapi/carbonapi.example.prometheus.yaml)
 
 ### How to send data from OpenTSDB-compatible agents
@@ -526,7 +529,15 @@ Additionally VictoriaMetrics provides the following handlers:
 * `/api/v1/status/active_queries` - it returns a list of currently running queries.
 
 
-### Graphite Metrics API usage
+### Graphite API usage
+
+VictoriaMetrics supports the following Graphite APIs:
+
+* Metrics API - see [these docs](#graphite-metrics-api-usage).
+* Tags API - see [these docs](#graphite-tags-api-usage).
+
+
+#### Graphite Metrics API usage
 
 VictoriaMetrics supports the following handlers from [Graphite Metrics API](https://graphite-api.readthedocs.io/en/latest/api.html#the-metrics-api):
 
@@ -538,6 +549,19 @@ VictoriaMetrics accepts the following additional query args at `/metrics/find` a
   * `label` - for selecting arbitrary label values. By default `label=__name__`, i.e. metric names are selected.
   * `delimiter` - for using different delimiters in metric name hierachy. For example, `/metrics/find?delimiter=_&query=node_*` would return all the metric name prefixes
     that start with `node_`. By default `delimiter=.`.
+
+
+#### Graphite Tags API usage
+
+VictoriaMetrics supports the following handlers from [Graphite Tags API](https://graphite.readthedocs.io/en/stable/tags.html):
+
+* [/tags/tagSeries](https://graphite.readthedocs.io/en/stable/tags.html#adding-series-to-the-tagdb)
+* [/tags/tagMultiSeries](https://graphite.readthedocs.io/en/stable/tags.html#adding-series-to-the-tagdb)
+* [/tags](https://graphite.readthedocs.io/en/stable/tags.html#exploring-tags)
+* [/tags/tag_name](https://graphite.readthedocs.io/en/stable/tags.html#exploring-tags)
+* [/tags/findSeries](https://graphite.readthedocs.io/en/stable/tags.html#exploring-tags)
+* [/tags/autoComplete/tags](https://graphite.readthedocs.io/en/stable/tags.html#auto-complete-support)
+* [/tags/autoComplete/values](https://graphite.readthedocs.io/en/stable/tags.html#auto-complete-support)
 
 
 ### How to build from sources
