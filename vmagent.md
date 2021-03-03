@@ -34,6 +34,7 @@ to `vmagent` such as the ability to push metrics instead of pulling them. We did
   are buffered at `-remoteWrite.tmpDataPath`. The buffered metrics are sent to remote storage as soon as the connection
   to the remote storage is repaired. The maximum disk usage for the buffer can be limited with `-remoteWrite.maxDiskUsagePerURL`.
 * Uses lower amounts of RAM, CPU, disk IO and network bandwidth compared with Prometheus.
+* Scrape targets can be spread among multiple `vmagent` instances when big number of targets must be scraped. See [these docs](#scraping-big-number-of-targets) for details.
 
 
 ## Quick Start
@@ -137,7 +138,7 @@ While `vmagent` can accept data in several supported protocols (OpenTSDB, Influx
 
 ## How to collect metrics in Prometheus format
 
-Pass the path to `prometheus.yml` to `-promscrape.config` command-line flag. `vmagent` takes into account the following
+Specify the path to `prometheus.yml` file via `-promscrape.config` command-line flag. `vmagent` takes into account the following
 sections from [Prometheus config file](https://prometheus.io/docs/prometheus/latest/configuration/configuration/):
 
 * `global`
@@ -226,6 +227,21 @@ You can read more about relabeling in the following articles:
 * [relabel_configs vs metric_relabel_configs](https://www.robustperception.io/relabel_configs-vs-metric_relabel_configs)
 
 
+## Scraping big number of targets
+
+A single `vmagent` instance can scrape tens of thousands of scrape targets. Sometimes this isn't enough due to limitations on CPU, network, RAM, etc.
+In this case scrape targets can be split among multiple `vmagent` instances (aka `vmagent` clustering).
+Each `vmagent` instance in the cluster must use identical `-promscrape.config` files with distinct `-promscrape.cluster.memberNum` values.
+The flag value must be in the range `0 ... N-1`, where `N` is the number of `vmagent` instances in the cluster.
+The number of `vmagent` instances in the cluster must be passed to `-promscrape.cluster.membersCount` command-line flag. For example, the following commands
+spread scrape targets among a cluster of two `vmagent` instances:
+
+```
+/path/to/vmagent -promscrape.cluster.membersCount=2 -promscrape.cluster.memberNum=0 -promscrape.config=/path/to/config.yml ...
+/path/to/vmagent -promscrape.cluster.membersCount=2 -promscrape.cluster.memberNum=1 -promscrape.config=/path/to/config.yml ...
+```
+
+
 ## Monitoring
 
 `vmagent` exports various metrics in Prometheus exposition format at `http://vmagent-host:8429/metrics` page. We recommend setting up regular scraping of this page
@@ -310,12 +326,6 @@ It may be useful to perform `vmagent` rolling update without any scrape loss.
 * If you see `skipping duplicate scrape target with identical labels` errors when scraping Kubernetes pods, then it is likely these pods listen to multiple ports
   or they use an init container. These errors can either be fixed or suppressed with the `-promscrape.suppressDuplicateScrapeTargetErrors` command-line flag.
   See the available options below if you prefer fixing the root cause of the error:
-
-  The following `relabel_configs` section may help determining `__meta_*` labels resulting in duplicate targets:
-  ```yml
-  - action: labelmap
-    regex: __meta_(.*)
-  ```
 
   The following relabeling rule may be added to `relabel_configs` section in order to filter out pods with unneeded ports:
   ```yml
@@ -473,7 +483,7 @@ See the docs at https://victoriametrics.github.io/vmagent.html .
   -loggerOutput string
     	Output for the logs. Supported values: stderr, stdout (default "stderr")
   -loggerTimezone string
-    	Timezone to use for timestamps in logs. Local timezone can be used (default "UTC")
+    	Timezone to use for timestamps in logs. Timezone must be a valid IANA Time Zone. For example: America/New_York, Europe/Berlin, Etc/GMT+3 or Local (default "UTC")
   -loggerWarnsPerSecondLimit int
     	Per-second limit on the number of WARN messages. If more than the given number of warns are emitted per second, then the remaining warns are suppressed. Zero value disables the rate limit
   -maxConcurrentInserts int
@@ -501,6 +511,10 @@ See the docs at https://victoriametrics.github.io/vmagent.html .
     	Trim timestamps for OpenTSDB HTTP data to this duration. Minimum practical duration is 1ms. Higher duration (i.e. 1s) may be used for reducing disk space usage for timestamp data (default 1ms)
   -pprofAuthKey string
     	Auth key for /debug/pprof. It overrides httpAuth settings
+  -promscrape.cluster.memberNum int
+    	The number of number in the cluster of scrapers. It must be an unique value in the range 0 ... promscrape.cluster.membersCount-1 across scrapers in the cluster
+  -promscrape.cluster.membersCount int
+    	The number of members in a cluster of scrapers. Each member must have an unique -promscrape.cluster.memberNum in the range 0 ... promscrape.cluster.membersCount-1 . Each member then scrapes roughly 1/N of all the targets. By default cluster scraping is disabled, i.e. a single scraper scrapes all the targets
   -promscrape.config string
     	Optional path to Prometheus config file with 'scrape_configs' section containing targets to scrape. See https://victoriametrics.github.io/#how-to-scrape-prometheus-exporters-such-as-node-exporter for details
   -promscrape.config.dryRun
@@ -533,6 +547,8 @@ See the docs at https://victoriametrics.github.io/vmagent.html .
     	Interval for checking for changes in 'file_sd_config'. See https://prometheus.io/docs/prometheus/latest/configuration/configuration/#file_sd_config for details (default 30s)
   -promscrape.gceSDCheckInterval gce_sd_configs
     	Interval for checking for changes in gce. This works only if gce_sd_configs is configured in '-promscrape.config' file. See https://prometheus.io/docs/prometheus/latest/configuration/configuration/#gce_sd_config for details (default 1m0s)
+  -promscrape.kubernetes.apiServerTimeout duration
+    	How frequently to reload the full state from Kuberntes API server (default 10m0s)
   -promscrape.kubernetesSDCheckInterval kubernetes_sd_configs
     	Interval for checking for changes in Kubernetes API server. This works only if kubernetes_sd_configs is configured in '-promscrape.config' file. See https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config for details (default 30s)
   -promscrape.maxDroppedTargets droppedTargets
@@ -558,7 +574,7 @@ See the docs at https://victoriametrics.github.io/vmagent.html .
     	Optional bearer auth token to use for -remoteWrite.url. If multiple args are set, then they are applied independently for the corresponding -remoteWrite.url
     	Supports array of values separated by comma or specified via multiple flags.
   -remoteWrite.flushInterval duration
-    	Interval for flushing the data to remote storage. Higher value reduces network bandwidth usage at the cost of delayed push of scraped data to remote storage. Minimum supported interval is 1 second (default 1s)
+    	Interval for flushing the data to remote storage. This option takes effect only when less than 10K data points per second are pushed to -remoteWrite.url (default 1s)
   -remoteWrite.label array
     	Optional label in the form 'name=value' to add to all the metrics before sending them to -remoteWrite.url. Pass multiple -remoteWrite.label flags in order to add multiple flags to metrics before sending them to remote storage
     	Supports array of values separated by comma or specified via multiple flags.
