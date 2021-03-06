@@ -4,13 +4,14 @@ email: info@victoriametrics.com
 description: >
   The Aspiring Monitoring Solution
 
-remote_theme: jekyll/minima
-titles_from_headings:
-  enabled:     true
-  strip_title: true
-  collections: false
+remote_theme: rundocs/jekyll-rtd-theme
+
+readme_index:
+  with_frontmatter: true
 
 google_analytics: UA-129683199-1
+
 plugins:
-  - jekyll-remote-theme
-  - jekyll-titles-from-headings
+  - github-pages
+
+
