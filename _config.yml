@@ -9,7 +9,8 @@ remote_theme: rundocs/jekyll-rtd-theme
 readme_index:
   with_frontmatter: true
 
-google_analytics: UA-129683199-1
+google:
+  gtag: UA-129683199-1
 
 plugins:
   - github-pages
