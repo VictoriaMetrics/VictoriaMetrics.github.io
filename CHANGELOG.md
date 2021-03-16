@@ -14,6 +14,7 @@
 * FEATURE: vmauth: allow using regexp paths in `url_map`. See [this issue](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/1112) for details.
 * FEATURE: accept `round_digits` query arg at `/api/v1/query` and `/api/v1/query_range` handlers. This option can be set at Prometheus datasource in Grafana for limiting the number of digits after the decimal point in response values.
 * FEATURE: add `-influx.databaseNames` command-line flag, which can be used for accepting data from some Telegraf plugins such as [fluentd plugin](https://github.com/fangli/fluent-plugin-influxdb). See [this issue](https://github.com/VictoriaMetrics/VictoriaMetrics/issues/1124).
+* FEATURE: add `-logNewSeries` command-line flag, which can be used for debugging the source of time series churn rate.
 
 * BUGFIX: vmagent: prevent from high CPU usage bug during failing scrapes with small `scrape_timeout` (less than a few seconds).
 * BUGFIX: vmagent: reduce memory usage when Kubernetes service discovery is used in big number of distinct scrape config jobs by sharing Kubernetes object cache. See https://github.com/VictoriaMetrics/VictoriaMetrics/issues/1113
@@ -23,6 +24,7 @@
 * BUGFUX: avoid `duplicate time series` error if `prometheus_buckets()` covers a time range with distinct set of buckets.
 * BUGFIX: prevent exponent overflow when processing extremely small values close to zero such as `2.964393875E-314`. See https://github.com/VictoriaMetrics/VictoriaMetrics/issues/1114
 * BUGFIX: do not include datapoints with a timestamp `t-d` when returning results from `/api/v1/query?query=m[d]&time=t` as Prometheus does.
+* BUGFIX: do not crash if a query contains `histogram_over_time()` function name with uppercase chars. For example, `Histogram_Over_Time(m[5m])`.
 
 
 # [v1.55.1](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.55.1)
