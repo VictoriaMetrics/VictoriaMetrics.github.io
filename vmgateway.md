@@ -39,8 +39,8 @@ jwt token must be in following format:
 }
 ```
 Where:
-- `exp` - required, expire time in unix_timestamp. If token expires, `vmgateway` rejects request.
-- `vm_access` - required, dict with claim info, minimum form: `{"vm_access": {"tenand_id": {}}`
+- `exp` - required, token expiration time in unix_timestamp. If token expires, `vmgateway` rejects request.
+- `vm_access` - required, object with claim information, minimum form: `{"vm_access": {"tenand_id": {}}`
 - `tenant_id` - optional, make sense only for cluster mode, routes request to corresponding tenant.
 - `extra_labels` - optional, key-value pairs for label filters - added to ingested or selected metrics.
 - `mode` - optional, access mode for api - read, write, full. supported values: 0 - full (default value), 1 - read, 2 - write.
@@ -179,7 +179,7 @@ The shortlist of configuration flags is the following:
   -datasource.maxIdleConnections int
         Defines the number of idle (keep-alive connections) to configured datasource.Consider to set this value equal to the value: groups_total * group.concurrency. Too low value may result into high number of sockets in TIME_WAIT state. (default 100)
   -datasource.queryStep duration
-        queryStep defines how far a value can fallback to when evaluating queries. For example, if datasource.queryStep=15s then param "step" with value "15s" will be added to every query.
+        queryStep defines how far into the past value can look when evaluating queries. For example, if datasource.queryStep=15s then param "step" with value "15s" will be added to every query.
   -datasource.tlsCAFile string
         Optional path to TLS CA file to use for verifying connections to -datasource.url. By default system CA is used
   -datasource.tlsCertFile string
@@ -199,7 +199,7 @@ The shortlist of configuration flags is the following:
   -enableTCP6
         Whether to enable IPv6 for listening and dialing. By default only IPv4 TCP and UDP is used
   -envflag.enable
-        Whether to enable reading flags from environment variables additionally to command line. Command line flag values have priority over values from environment vars. Flags are read only from command line if this flag isnt set
+        Whether to enable reading flags from environment variables in addition to command line flags. Command line flag values have priority over values from environment vars. Flags are read only from command line if this flag isnt set
   -envflag.prefix string
         Prefix for environment variables if -envflag.enable is set
   -eula
@@ -239,10 +239,10 @@ The shortlist of configuration flags is the following:
   -loggerWarnsPerSecondLimit int
         Per-second limit on the number of WARN messages. If more than the given number of warns are emitted per second, then the remaining warns are suppressed. Zero value disables the rate limit
   -memory.allowedBytes size
-        Allowed size of system memory VictoriaMetrics caches may occupy. This option overrides -memory.allowedPercent if set to non-zero value. Too low value may increase cache miss rate, which usually results in higher CPU and disk IO usage. Too high value may evict too much data from OS page cache, which will result in higher disk IO usage
+        Allowed size of system memory VictoriaMetrics caches may occupy. This option overrides -memory.allowedPercent if set to non-zero value. Too low value may increase cache miss rate, which usually results in higher CPU and disk IO usage. Too high of a value may keep too much data out of the OS page cache which will result in higher disk IO usage
         Supports the following optional suffixes for size values: KB, MB, GB, KiB, MiB, GiB (default 0)
   -memory.allowedPercent float
-        Allowed percent of system memory VictoriaMetrics caches may occupy. See also -memory.allowedBytes. Too low value may increase cache miss rate, which usually results in higher CPU and disk IO usage. Too high value may evict too much data from OS page cache, which will result in higher disk IO usage (default 60)
+        Allowed percent of system memory VictoriaMetrics caches may occupy. See also -memory.allowedBytes. Too low value may increase cache miss rate, which usually results in higher CPU and disk IO usage. Too high of a value may keep too much data out of the OS page cache which will result in higher disk IO usage (default 60)
   -metricsAuthKey string
         Auth key for /metrics. It overrides httpAuth settings
   -pprofAuthKey string
