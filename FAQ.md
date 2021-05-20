@@ -223,6 +223,32 @@ Questions about VictoriaMetrics can be asked via the following channels:
 File bugs and feature requests [here](https://github.com/VictoriaMetrics/VictoriaMetrics/issues).
 
 
-### Are you looking for investors?
+### Where I can find information about multi-tenancy?
 
-Yes. [Mail us](mailto:info@victoriametrics.com) if you are interested in.
+See more details about multi-tenancy [here](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#multitenancy). Please note, this feature is supported only by [cluster](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html) version of VictoriaMetrics.
+
+
+### How to set a memory limit for VictoriaMetrics components?
+
+All the VictoriaMetrics component provide command-line flags to control the size of internal buffers and caches: `-memory.allowedPercent` and `-memory.allowedBytes` (pass `-help` to any VictoriaMetrics component in order to see the description for these flags). These limits don't take into account additional memory, which may be needed for processing incoming queries. Hard limits may be enforced only by the OS via [cgroups](https://en.wikipedia.org/wiki/Cgroups), Docker (see [these docs](https://docs.docker.com/config/containers/resource_constraints)) or Kubernetes (see [these docs](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers)).
+
+Memory usage for VictoriaMetrics components can be tuned according to the following docs:
+
+* [Capacity planning for single-node VictoriaMetrics](https://docs.victoriametrics.com/#capacity-planning)
+* [Capacity planning for cluster VictoriaMetrics](https://docs.victoriametrics.com/Cluster-VictoriaMetrics.html#capacity-planning)
+* [Troubleshooting for vmagent](https://docs.victoriametrics.com/vmagent.html#troubleshooting)
+* [Troubleshooting for single-node VictoriaMetrics](https://docs.victoriametrics.com/#troubleshooting)
+
+
+### Can I use VictoriaMetrics instead of Prometheus?
+
+Yes in most cases. VictoriaMetrics can substitute Prometheus in the following aspects:
+
+* Prometheus-compatible service discovery and target scraping can be done with [vmagent](https://docs.victoriametrics.com/vmagent.html) and with single-node VictoriaMetrics - see [these docs](https://docs.victoriametrics.com/#how-to-scrape-prometheus-exporters-such-as-node-exporter).
+* Prometheus-compatible alerting rules and recording rules can be processed with [vmalert](https://docs.victoriametrics.com/vmalert.html).
+* Prometheus-compatible querying in Grafana is supported by VictoriaMetrics. See [these docs](https://docs.victoriametrics.com/#grafana-setup).
+
+
+### How can I run VictoriaMetrics on FreeBSD?
+
+VictoriaMetrics is included in FreeBSD ports, so just install it from there. See [this link](https://www.freebsd.org/cgi/ports.cgi?query=victoria&stype=all).
