@@ -1,4 +1,4 @@
-# Kubernetes monitoring with VictoriaMetrics
+# Kubernetes monitoring with VictoriaMetrics Single
 
 
 **This guide covers:**
@@ -14,12 +14,12 @@
 
 We will use:
 * [Kubernetes cluster 1.19.10-gke.1600](https://cloud.google.com/kubernetes-engine)
-> We use GKE cluster from GCP but if you have [Amazon EKS](https://aws.amazon.com/ru/eks/) this guide also applies.
+> We use GKE cluster from GCP but feel free to use any kubernetes setup eg [Amazon EKS](https://aws.amazon.com/ru/eks/)
 * [helm 3 ](https://helm.sh/docs/intro/install)
 * [kubectl 1.21](https://kubernetes.io/docs/tasks/tools/install-kubectl)
 
 <p align="center">
-  <img src="https://docs.google.com/drawings/d/e/2PACX-1vQcxy5YMZpSd6Dp_wa3E2-9wOn8sTLbqTQUB3Tldr62vgVr_suwr3vEkNwFPYgoYXn-VAGYBX923lmZ/pub?w=960&amp;h=746">
+  <img src="../assets/k8s/k8s-vm-single-scheme.png">
 </p>
 
 **1. VictoriaMetrics helm repository**
