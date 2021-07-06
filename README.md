@@ -1,1 +1,1 @@
-# VictoriaMetrics docs placeholder
+VictoriaMetrics docs has moved to [https://docs.victoriametrics.com/](https://docs.victoriametrics.com/)
