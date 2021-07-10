@@ -1,3 +1,4 @@
 <script>
-    window.location = "https://docs.victoriametrics.com" + window.location.pathname;
+    var loc = window.location;
+    window.location = "https://docs.victoriametrics.com" + loc.pathname + loc.hash;
 </script>
